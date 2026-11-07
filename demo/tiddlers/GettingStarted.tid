@@ -2,9 +2,9 @@ title: GettingStarted
 
 ! Offline Mermaid v11+ for TiddlyWiki5
 
-Welcome to the demo wiki for the ''Mermaid for TiddlyWiki5'' plugin (`$:/plugins/mblackman/mermaid`).
+Welcome to the demo wiki for the ''Mermaid for TiddlyWiki5'' plugin ([[$:/plugins/mblackman/mermaid]]).
 
-This plugin bundles **Mermaid v11+** into a completely offline, zero-network package supporting all modern diagram types in both standard WikiText and Markdown tiddlers.
+This plugin bundles ''Mermaid v11+'' into a completely offline, zero-network package supporting all modern diagram types in both standard WikiText and Markdown tiddlers.
 
 !! WikiText Fenced Block Example
 

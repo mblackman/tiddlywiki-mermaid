@@ -32,6 +32,6 @@ sequenceDiagram
 
 ## Feature List in Markdown
 
-* [x] Markdown notes support ```` ```mermaid ```` fenced blocks
-* [x] Automatic theme detection (matches active palette)
-* [x] Fully offline, zero CDN calls
+* Markdown notes support ```` ```mermaid ```` fenced blocks
+* Automatic theme detection (matches active palette)
+* Fully offline, zero CDN calls

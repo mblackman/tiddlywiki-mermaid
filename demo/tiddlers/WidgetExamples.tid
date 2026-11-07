@@ -4,9 +4,21 @@ title: WidgetExamples
 
 !! 1. Direct Attribute Usage
 
+```html
+<$mermaid text="flowchart LR; A[Left] --> B[Center] --> C[Right];"/>
+```
+
 <$mermaid text="flowchart LR; A[Left] --> B[Center] --> C[Right];"/>
 
 !! 2. Inline Widget Body
+
+```html
+<$mermaid>
+flowchart TD
+    Alpha[Alpha Node] --> Beta[Beta Node]
+    Beta --> Gamma[Gamma Node]
+</$mermaid>
+```
 
 <$mermaid>
 flowchart TD
@@ -17,14 +29,33 @@ flowchart TD
 !! 3. Alignment
 
 !!! Left Aligned
+
+```html
+<$mermaid align="left" text="graph LR; A-->B;"/>
+```
+
 <$mermaid align="left" text="graph LR; A-->B;"/>
 
 !!! Right Aligned
+
+```html
+<$mermaid align="right" text="graph LR; X-->Y;"/>
+```
+
 <$mermaid align="right" text="graph LR; X-->Y;"/>
 
 !! 4. Explicit Theme Override
 
 !!! Forest Theme (`theme="forest"`)
+
+```html
+<$mermaid theme="forest" text="pie title Languages Used
+    'JavaScript' : 55
+    'WikiText' : 30
+    'CSS' : 15
+"/>
+```
+
 <$mermaid theme="forest" text="pie title Languages Used
     'JavaScript' : 55
     'WikiText' : 30
@@ -32,15 +63,27 @@ flowchart TD
 "/>
 
 !!! Neutral Theme (`theme="neutral"`)
+
+```html
+<$mermaid theme="neutral" text="graph TD; A[Clean Design] --> B[Neutral Tones];"/>
+```
+
 <$mermaid theme="neutral" text="graph TD; A[Clean Design] --> B[Neutral Tones];"/>
 
 !! 5. Error Handling & Diagnostics
 
 The plugin catches malformed diagram syntax and renders an accessible error alert box inline without crashing the wiki.
 
-<details>
-<summary>''Show Error Handling Demo'' (click to view malformed diagram alert)</summary>
+<$reveal type="nomatch" state="$:/state/demo/error-handling" text="show">
+<$button set="$:/state/demo/error-handling" setTo="show" class="tc-btn-invisible tc-tiddlylink">
+▶ ''Show Error Handling Demo'' (click to view malformed diagram alert)
+</$button>
+</$reveal>
+<$reveal type="match" state="$:/state/demo/error-handling" text="show">
+<$button set="$:/state/demo/error-handling" setTo="hide" class="tc-btn-invisible tc-tiddlylink">
+▼ ''Hide Error Handling Demo''
+</$button>
 
 <$mermaid text="graph TD; this is not valid mermaid syntax @@!!"/>
 
-</details>
+</$reveal>
