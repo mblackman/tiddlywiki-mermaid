@@ -77,9 +77,12 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
   });
 
   test("plugin is loaded and registered in shadow tiddlers", () => {
+    const pluginInfo = JSON.parse(
+      fs.readFileSync(path.join(ROOT, "plugins", "mblackman", "mermaid", "plugin.info"), "utf8")
+    );
     const pluginTiddler = $tw.wiki.getTiddler("$:/plugins/mblackman/mermaid");
     assert.ok(pluginTiddler, "Plugin $:/plugins/mblackman/mermaid must be loaded");
-    assert.equal(pluginTiddler.fields.version, "0.2.0");
+    assert.equal(pluginTiddler.fields.version, pluginInfo.version);
 
     const widgetTiddler = $tw.wiki.getTiddler("$:/plugins/mblackman/mermaid/widget.js");
     assert.ok(widgetTiddler, "Widget tiddler must be loaded");

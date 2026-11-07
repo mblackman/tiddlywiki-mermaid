@@ -1,0 +1,121 @@
+name: Auto-update Mermaid
+
+on:
+  schedule:
+    # Run daily at 04:00 UTC
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force update and release even if version has not changed"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: update-mermaid
+  cancel-in-progress: false
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      has_update: ${{ steps.check.outputs.has_update }}
+      latest_mermaid: ${{ steps.check.outputs.latest_mermaid }}
+      new_version: ${{ steps.check.outputs.new_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for new Mermaid release
+        id: check
+        run: node scripts/update-mermaid.mjs --check
+
+      - name: Apply Mermaid update
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        run: |
+          FORCE_FLAG="${{ inputs.force == true && '--force' || '' }}"
+          node scripts/update-mermaid.mjs --apply $FORCE_FLAG
+
+      - name: Run test suite
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        run: npm test
+
+      - name: Build plugin and demo wiki
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        run: npm run build-all
+
+      - name: Commit and push updates
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        run: |
+          NEW_TAG="v${{ steps.check.outputs.new_version }}"
+          MERMAID_VER="${{ steps.check.outputs.latest_mermaid }}"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add package.json package-lock.json plugins/mblackman/mermaid/plugin.info
+          
+          if git diff --staged --quiet; then
+            echo "No changes detected to commit."
+          else
+            git commit -m "chore(deps): upgrade mermaid to v${MERMAID_VER} (${NEW_TAG})"
+            git tag "${NEW_TAG}"
+            git push origin main
+            git push origin "${NEW_TAG}"
+          fi
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ steps.check.outputs.new_version }}"
+          name: "v${{ steps.check.outputs.new_version }} (Mermaid v${{ steps.check.outputs.latest_mermaid }})"
+          body: |
+            Automated release upgrading Mermaid to `v${{ steps.check.outputs.latest_mermaid }}`.
+            
+            ### Artifacts Included
+            - `mermaid.tid`: Single-file plugin tiddler
+            - `mermaid-plugin.json`: Drag-and-drop bundle for TiddlyWiki
+            - `index.html`: Complete standalone demo wiki
+          files: |
+            dist/mermaid.tid
+            dist/mermaid-plugin.json
+            dist/index.html
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
+      - name: Upload Pages artifact
+        if: steps.check.outputs.has_update == 'true' || inputs.force == true
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy-pages:
+    needs: check-and-release
+    if: needs.check-and-release.outputs.has_update == 'true' || inputs.force == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
