@@ -36,6 +36,11 @@ flowchart TD
 
 !! 5. Error Handling & Diagnostics
 
-Here is a deliberately malformed diagram to demonstrate the accessible syntax error alert box:
+The plugin catches malformed diagram syntax and renders an accessible error alert box inline without crashing the wiki.
+
+<details>
+<summary>''Show Error Handling Demo'' (click to view malformed diagram alert)</summary>
 
 <$mermaid text="graph TD; this is not valid mermaid syntax @@!!"/>
+
+</details>

@@ -41,13 +41,14 @@ gitGraph
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Idle
-    Idle --> Queued: User opens note
-    Queued --> Rendering: Async queue executes
-    Rendering --> Rendered: Promise resolved (SVG injected)
-    Rendering --> Error: Syntax error caught
-    Error --> Idle: Text edited
-    Rendered --> Idle: Text edited
+    [*] --> Draft
+    Draft --> InReview: Submit for review
+    InReview --> Approved: Review passes
+    InReview --> ChangesRequested: Feedback provided
+    ChangesRequested --> Draft: Revise document
+    Approved --> Published: Publish to production
+    Published --> Archived: Archive
+    Archived --> [*]
 ```
 
 !! 4. Entity-Relationship Diagram

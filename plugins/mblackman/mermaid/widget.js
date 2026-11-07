@@ -49,6 +49,41 @@ MermaidWidget.prototype.render = function(parent, nextSibling) {
 	}
 };
 
+MermaidWidget.prototype.extractText = function(node) {
+	if(!node) {
+		return "";
+	}
+	if(node.type === "text") {
+		return node.text || "";
+	}
+	if(node.type === "entity") {
+		// TiddlyWiki WikiText dash rule transforms '--' to &ndash; and '---' to &mdash;
+		// Mermaid syntax strictly requires ASCII hyphens for arrows (-->) and links (---)
+		if(node.entity === "&ndash;") {
+			return "--";
+		}
+		if(node.entity === "&mdash;") {
+			return "---";
+		}
+		return $tw.utils.entityDecode(node.entity || "");
+	}
+	if(node.type === "element" && node.tag === "br") {
+		return "\n";
+	}
+	if(node.children && node.children.length > 0) {
+		var parts = [];
+		for(var i = 0; i < node.children.length; i++) {
+			parts.push(this.extractText(node.children[i]));
+		}
+		var text = parts.join("");
+		if(node.type === "element" && (node.tag === "p" || node.tag === "div")) {
+			return text + "\n";
+		}
+		return text;
+	}
+	return "";
+};
+
 MermaidWidget.prototype.execute = function() {
 	this.sourceText = this.getAttribute("text", "");
 	if(!this.sourceText) {
@@ -57,11 +92,9 @@ MermaidWidget.prototype.execute = function() {
 	// Fallback to inline text children if attributes are omitted
 	if(!this.sourceText && this.parseTreeNode && this.parseTreeNode.children) {
 		var textParts = [];
-		$tw.utils.each(this.parseTreeNode.children, function(child) {
-			if(child.type === "text" && child.text) {
-				textParts.push(child.text);
-			}
-		});
+		for(var i = 0; i < this.parseTreeNode.children.length; i++) {
+			textParts.push(this.extractText(this.parseTreeNode.children[i]));
+		}
 		if(textParts.length > 0) {
 			this.sourceText = textParts.join("");
 		}

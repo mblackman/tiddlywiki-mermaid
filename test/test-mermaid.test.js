@@ -113,6 +113,29 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
     assert.ok(html.includes("tc-mermaid-container"), "Must output tc-mermaid-container");
   });
 
+  test("<$mermaid> inline child body text preserves arrows and entities", () => {
+    const parser = $tw.wiki.parseText(
+      "text/vnd.tiddlywiki",
+      '<$mermaid>\nflowchart TD\n    Alpha[Alpha Node] --> Beta[Beta Node]\n    Beta --- Gamma[Gamma Node]\n    Gamma -.-> Delta["Cats & Dogs"]\n</$mermaid>'
+    );
+    const widgetNode = parser.tree[0].children[0];
+    const widget = new MermaidWidget(widgetNode, { wiki: $tw.wiki, document: $tw.fakeDocument });
+    widget.execute();
+
+    assert.ok(widget.sourceText.includes("Alpha[Alpha Node] --> Beta[Beta Node]"), "Arrows must retain hyphens: " + widget.sourceText);
+    assert.ok(widget.sourceText.includes("Beta --- Gamma[Gamma Node]"), "3-dash links must retain hyphens: " + widget.sourceText);
+    assert.ok(widget.sourceText.includes('Cats & Dogs'), "HTML entities must be decoded properly: " + widget.sourceText);
+
+    // Test block mode (paragraphs inside widget body)
+    const blockParser = $tw.wiki.parseText(
+      "text/vnd.tiddlywiki",
+      '<$mermaid>\n\nflowchart TD\n  X --> Y\n\n</$mermaid>'
+    );
+    const blockWidget = new MermaidWidget(blockParser.tree[0], { wiki: $tw.wiki, document: $tw.fakeDocument });
+    blockWidget.execute();
+    assert.ok(blockWidget.sourceText.includes("X --> Y"), "Block-mode widget must extract child paragraphs: " + blockWidget.sourceText);
+  });
+
   test("global $codeblock intercepts WikiText ```mermaid codeblocks", () => {
     $tw.wiki.addTiddler(new $tw.Tiddler({
       title: "TestWikiTextCodeblock",
