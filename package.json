@@ -12,7 +12,7 @@
     "build-demo": "cross-env TIDDLYWIKI_PLUGIN_PATH=plugins tiddlywiki demo --output dist --build index",
     "build-all": "npm run clean-runtime && npm run build:mermaid && npm run build-plugin && npm run build-demo && npm run clean-runtime",
     "dev": "npm run build:mermaid && cross-env TIDDLYWIKI_PLUGIN_PATH=plugins tiddlywiki demo --listen port=8080 host=127.0.0.1",
-    "test": "node --test --test-force-exit test/*.test.js"
+    "test": "npm run build:mermaid && node --test --test-force-exit test/*.test.js"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
