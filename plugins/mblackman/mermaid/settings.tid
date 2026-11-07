@@ -1,0 +1,9 @@
+title: $:/plugins/mblackman/mermaid/settings
+
+! Mermaid Settings
+
+Configure default diagram rendering options:
+
+|!Setting |!Description |!Value |
+|''Theme'' |Diagram color theme |<$select tiddler="$:/config/mblackman/mermaid/theme" default="auto"><option value="auto">Auto (Matches active palette)</option><option value="default">Default (Light)</option><option value="dark">Dark</option><option value="forest">Forest (Green tones)</option><option value="neutral">Neutral (Grayscale / clean)</option><option value="base">Base</option></$select> |
+|''Security Level'' |Mermaid script evaluation policy |<$select tiddler="$:/config/mblackman/mermaid/securityLevel" default="loose"><option value="loose">Loose (Recommended, allows click callbacks)</option><option value="strict">Strict (Tags are sanitized)</option><option value="antiscript">Antiscript (HTML tags allowed, scripts removed)</option><option value="sandbox">Sandbox (Iframe sandbox)</option></$select> |

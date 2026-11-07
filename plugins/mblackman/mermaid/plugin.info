@@ -1,0 +1,11 @@
+{
+  "title": "$:/plugins/mblackman/mermaid",
+  "name": "Mermaid",
+  "description": "Offline Mermaid v11+ diagram rendering for WikiText and Markdown",
+  "author": "mblackman",
+  "version": "0.1.0",
+  "core-version": ">=5.3.0",
+  "source": "https://github.com/mblackman/tiddlywiki-mermaid",
+  "plugin-type": "plugin",
+  "list": "readme settings"
+}

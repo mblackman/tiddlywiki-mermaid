@@ -1,0 +1,36 @@
+{
+  "description": "Mermaid Plugin Demo Wiki",
+  "plugins": [
+    "tiddlywiki/tiddlyweb",
+    "tiddlywiki/filesystem",
+    "tiddlywiki/highlight",
+    "tiddlywiki/markdown",
+    "mblackman/mermaid"
+  ],
+  "themes": [
+    "tiddlywiki/vanilla",
+    "tiddlywiki/snowwhite"
+  ],
+  "build": {
+    "index": [
+      "--rendertiddler",
+      "$:/plugins/tiddlywiki/tiddlyweb/save/offline",
+      "index.html",
+      "text/plain"
+    ],
+    "plugin": [
+      "--rendertiddler",
+      "$:/plugins/mblackman/mermaid",
+      "mermaid.tid",
+      "text/plain",
+      "$:/core/templates/exporters/TidFile",
+      "exportFilter",
+      "[<currentTiddler>]",
+      "--rendertiddler",
+      "$:/plugins/mblackman/mermaid",
+      "mermaid-plugin.json",
+      "text/plain",
+      "$:/core/templates/json-tiddler"
+    ]
+  }
+}

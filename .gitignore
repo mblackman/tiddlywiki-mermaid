@@ -1,0 +1,29 @@
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Dependencies & Build Output
+node_modules/
+build/
+dist/
+plugins/mblackman/mermaid/files/mermaid.min.js
+
+# Logs & Coverage
+logs/
+*.log
+npm-debug.log*
+coverage/
+.nyc_output
+
+# TiddlyWiki runtime state in demo/
+demo/tiddlers/$__StoryList*
+demo/tiddlers/$__HistoryList*
+demo/tiddlers/$__UpgradeLibrary*
+demo/tiddlers/$__temp_*
+demo/tiddlers/$__state_*
+demo/tiddlers/$__info_*
+demo/tiddlers/$__Import*
+demo/tiddlers/$__palettes_*
+demo/tiddlers/Test*

@@ -1,0 +1,11 @@
+title: $:/plugins/mblackman/mermaid/codeblock-override
+tags: $:/tags/Global $:/tags/Global/View/Body
+
+\whitespace trim
+\widget $codeblock(code, language)
+<% if [<language>trim[]lowercase[]split[ ]first[]match[mermaid]] %>
+  <$mermaid text=<<code>>/>
+<% else %>
+  <$genesis $type="$codeblock" $remappable="no" code=<<code>> language=<<language>>/>
+<% endif %>
+\end

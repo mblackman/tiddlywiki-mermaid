@@ -1,0 +1,41 @@
+title: WidgetExamples
+
+! `<$mermaid>` Widget Examples
+
+!! 1. Direct Attribute Usage
+
+<$mermaid text="flowchart LR; A[Left] --> B[Center] --> C[Right];"/>
+
+!! 2. Inline Widget Body
+
+<$mermaid>
+flowchart TD
+    Alpha[Alpha Node] --> Beta[Beta Node]
+    Beta --> Gamma[Gamma Node]
+</$mermaid>
+
+!! 3. Alignment
+
+!!! Left Aligned
+<$mermaid align="left" text="graph LR; A-->B;"/>
+
+!!! Right Aligned
+<$mermaid align="right" text="graph LR; X-->Y;"/>
+
+!! 4. Explicit Theme Override
+
+!!! Forest Theme (`theme="forest"`)
+<$mermaid theme="forest" text="pie title Languages Used
+    'JavaScript' : 55
+    'WikiText' : 30
+    'CSS' : 15
+"/>
+
+!!! Neutral Theme (`theme="neutral"`)
+<$mermaid theme="neutral" text="graph TD; A[Clean Design] --> B[Neutral Tones];"/>
+
+!! 5. Error Handling & Diagnostics
+
+Here is a deliberately malformed diagram to demonstrate the accessible syntax error alert box:
+
+<$mermaid text="graph TD; this is not valid mermaid syntax @@!!"/>

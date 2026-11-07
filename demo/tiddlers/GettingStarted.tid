@@ -1,0 +1,31 @@
+title: GettingStarted
+
+! Offline Mermaid v11+ for TiddlyWiki5
+
+Welcome to the demo wiki for the ''Mermaid for TiddlyWiki5'' plugin (`$:/plugins/mblackman/mermaid`).
+
+This plugin bundles **Mermaid v11+** into a completely offline, zero-network package supporting all modern diagram types in both standard WikiText and Markdown tiddlers.
+
+!! WikiText Fenced Block Example
+
+```mermaid
+flowchart TD
+    Start([User Request]) --> Review[Review Spec]
+    Review --> Plan[/Implementation Plan/]
+    Plan --> Approval{Approved?}
+    Approval -->|Yes| Build[Bundle Mermaid v11 & Build Plugin]
+    Approval -->|No| Revise[Refine Plan]
+    Build --> Verify[Automated Tests & Headless Verification]
+    Verify --> Done([Production Ready])
+```
+
+!! Markdown Integration
+
+Mermaid works seamlessly inside Markdown notes (`text/x-markdown` or `text/markdown`)!
+Open [[MarkdownNoteExample]] to see a pure Markdown note with embedded diagrams.
+
+!! Diagram Gallery & Features
+
+* [[DiagramGallery]] — Explore Mermaid v11 flowcharts, sequences, mindmaps, git graphs, and modern diagram types.
+* [[WidgetExamples]] — Direct `<$mermaid>` widget syntax, themes, alignments, and error handling.
+* [[$:/plugins/mblackman/mermaid/settings]] — Configure default themes and security settings.

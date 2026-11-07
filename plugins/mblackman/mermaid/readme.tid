@@ -1,0 +1,55 @@
+title: $:/plugins/mblackman/mermaid/readme
+
+! Mermaid for TiddlyWiki5
+
+Modern, self-contained, 100% offline **Mermaid.js (v11+)** diagram rendering for TiddlyWiki5.
+
+!! Features
+
+* ''100% Offline:'' Bundles Mermaid v11+ with all diagram types inlined. No external CDNs or network requests.
+* ''Unified WikiText & Markdown:'' Render diagrams inside standard fenced code blocks (<code>```mermaid</code>) in both native WikiText and Markdown tiddlers (`$:/plugins/tiddlywiki/markdown`).
+* ''Direct Widget Support:'' Embed diagrams anywhere using `<$mermaid text="..." />` or inline `<$mermaid>...</$mermaid>`.
+* ''Mermaid v11 Diagrams:'' Supports Flowcharts, Sequence Diagrams, Class Diagrams, State Diagrams, ER Diagrams, Mindmaps, Timelines, GitGraphs, Pie Charts, Quadrants, XY Charts, Kanban, Architecture Diagrams, C4, Sankey, Packet, Block, and more.
+* ''Automatic Dark Mode:'' Seamlessly adapts diagrams between light and dark palettes.
+* ''Suite Design System Ready:'' Fully compatible with the TiddlyWiki Productivity Suite (`MASTER.md`) and Slipstream theme.
+
+!! Usage
+
+!!! 1. Fenced Code Blocks (WikiText & Markdown)
+
+````markdown
+```mermaid
+flowchart LR
+    A[Start] --> B{Decision}
+    B -->|Yes| C[Proceed]
+    B -->|No| D[Halt]
+```
+````
+
+!!! 2. `<$mermaid>` Widget
+
+```html
+<$mermaid text="graph TD; A-->B;"/>
+```
+
+Or with inline body:
+
+```html
+<$mermaid>
+mindmap
+  root((Central Idea))
+    Topic 1
+      Subtopic A
+      Subtopic B
+    Topic 2
+</$mermaid>
+```
+
+!! Attributes
+
+|!Attribute |!Description |!Default |
+|`text` or `source` |The Mermaid diagram definition string |`""` |
+|`theme` |`auto`, `default`, `dark`, `forest`, `neutral`, or `base` |`auto` |
+|`align` |Container alignment: `left`, `center`, or `right` |`center` |
+|`class` |Optional additional CSS class names for styling |`""` |
+|`security-level` |Mermaid security level: `loose`, `strict`, `antiscript`, or `sandbox` |`loose` |

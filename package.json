@@ -1,0 +1,24 @@
+{
+  "name": "tiddlywiki-mermaid",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Offline Mermaid v11+ diagram rendering plugin for TiddlyWiki5",
+  "author": "mblackman",
+  "license": "MIT",
+  "scripts": {
+    "clean-runtime": "node scripts/clean-runtime.mjs",
+    "build:mermaid": "node scripts/build-mermaid.mjs",
+    "build-plugin": "node scripts/build-plugin.mjs",
+    "build-demo": "cross-env TIDDLYWIKI_PLUGIN_PATH=plugins tiddlywiki demo --output dist --build index",
+    "build-all": "npm run clean-runtime && npm run build:mermaid && npm run build-plugin && npm run build-demo && npm run clean-runtime",
+    "dev": "npm run build:mermaid && cross-env TIDDLYWIKI_PLUGIN_PATH=plugins tiddlywiki demo --listen port=8080 host=127.0.0.1",
+    "test": "node --test --test-force-exit test/*.test.js"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "esbuild": "^0.25.0",
+    "jsdom": "^31.0.0",
+    "mermaid": "^11.4.1",
+    "tiddlywiki": "^5.4.1"
+  }
+}

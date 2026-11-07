@@ -1,0 +1,96 @@
+title: $:/plugins/mblackman/mermaid/styles
+tags: $:/tags/Stylesheet
+type: text/vnd.tiddlywiki
+
+\rules only filteredtranscludeinline transcludeinline macrodef macrocallinline
+
+/* ==========================================================================
+   TiddlyWiki Mermaid Plugin Styles ($:/plugins/mblackman/mermaid)
+   Follows Suite Design System Architecture (MASTER.md)
+   ========================================================================== */
+
+:where(:root, .tc-page-container) {
+  /* Standalone Tier 1 Suite Token Fallbacks */
+  --suite-surface-primary: var(--tpc-tiddler-background, <<colour tiddler-background>>);
+  --suite-fg-primary: var(--tpc-foreground, <<colour foreground>>);
+  --suite-border-subtle: color-mix(in oklab, var(--suite-fg-primary) 12%, transparent);
+  --suite-border-control: color-mix(in oklab, var(--suite-fg-primary) 46%, var(--suite-surface-primary));
+  --suite-radius-sm: 8px;
+  --suite-radius-md: 10px;
+  --suite-font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  --suite-font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Status Triads (Danger / Error) */
+  --suite-status-danger-accent: var(--tpc-alert-highlight, <<colour dirty-indicator>>);
+  --suite-status-danger-fg: color-mix(in oklab, var(--suite-status-danger-accent) 85%, var(--suite-fg-primary));
+  --suite-status-danger-bg: color-mix(in oklab, var(--suite-status-danger-accent) 12%, var(--suite-surface-primary));
+  --suite-status-danger-border: color-mix(in oklab, var(--suite-status-danger-accent) 32%, transparent);
+
+  /* Tier 3 Scoped Mermaid Tokens */
+  --mm-container-margin: 1.25rem 0;
+  --mm-container-padding: 0.5rem;
+}
+
+/* Diagram Container */
+.tc-mermaid-container {
+  display: block;
+  margin: var(--mm-container-margin);
+  padding: var(--mm-container-padding);
+  overflow-x: auto;
+  text-align: center;
+  border-radius: var(--suite-radius-sm);
+  transition: background-color 0.16s ease;
+}
+
+.tc-mermaid-container svg {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+/* Alignment Helpers */
+.tc-mermaid-align-left {
+  text-align: left;
+}
+
+.tc-mermaid-align-center {
+  text-align: center;
+}
+
+.tc-mermaid-align-right {
+  text-align: right;
+}
+
+/* Accessible Syntax Error Box */
+.tc-mermaid-error {
+  text-align: left;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: var(--suite-status-danger-bg);
+  color: var(--suite-status-danger-fg);
+  border: 1px solid var(--suite-status-danger-border);
+  border-inline-start: 4px solid var(--suite-status-danger-accent);
+  border-radius: var(--suite-radius-md);
+  font-family: var(--suite-font-sans);
+}
+
+.tc-mermaid-error-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.01em;
+}
+
+.tc-mermaid-error-message {
+  margin: 0;
+  font-family: var(--suite-font-mono);
+  font-size: 0.8125rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.45;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+}

@@ -1,0 +1,37 @@
+title: MarkdownNoteExample
+type: text/x-markdown
+
+# Markdown Note with Mermaid Diagram
+
+This note is written entirely in **Markdown** (`type: text/x-markdown`).
+
+Because the global `$codeblock` widget intercepts `language="mermaid"`, fenced code blocks in Markdown work out-of-the-box without requiring any custom markdown-it extensions or external services!
+
+## System Architecture
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Client Browser
+    participant TW as TiddlyWiki River
+    participant CB as $codeblock Interceptor
+    participant W as <$mermaid> Widget
+    participant Q as Async Render Queue
+    participant M as Mermaid v11 Bundle
+
+    User->>TW: Opens Markdown Note
+    TW->>CB: <$codeblock code="..." language="mermaid"/>
+    CB->>W: Delegates to <$mermaid text=code />
+    W->>W: Creates synchronous container <div>
+    W->>Q: Enqueue render task
+    Q->>M: mermaid.render(id, code)
+    M-->>Q: Returns SVG promise
+    Q-->>W: Injects SVG into container <div>
+    W-->>User: Diagram renders seamlessly!
+```
+
+## Feature List in Markdown
+
+* [x] Markdown notes support ```` ```mermaid ```` fenced blocks
+* [x] Automatic theme detection (matches active palette)
+* [x] Fully offline, zero CDN calls

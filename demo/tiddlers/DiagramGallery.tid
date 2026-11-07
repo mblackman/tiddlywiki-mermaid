@@ -1,0 +1,73 @@
+title: DiagramGallery
+
+! Mermaid v11 Diagram Gallery
+
+!! 1. Mindmap
+
+```mermaid
+mindmap
+  root((TiddlyWiki))
+    Plugins
+      Slipstream
+      Projectify
+      Journal
+      Mermaid
+    Features
+      Single HTML File
+      Non-linear Notebook
+      Offline First
+    Community
+      Open Source
+      Extensible
+```
+
+!! 2. Git Graph
+
+```mermaid
+gitGraph
+   commit
+   commit
+   branch feature/mermaid-v11
+   checkout feature/mermaid-v11
+   commit id: "add-esbuild"
+   commit id: "bundle-cjs"
+   commit id: "add-widget"
+   checkout main
+   merge feature/mermaid-v11
+   commit id: "release-v0.1.0" tag: "v0.1.0"
+```
+
+!! 3. State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Queued: User opens note
+    Queued --> Rendering: Async queue executes
+    Rendering --> Rendered: Promise resolved (SVG injected)
+    Rendering --> Error: Syntax error caught
+    Error --> Idle: Text edited
+    Rendered --> Idle: Text edited
+```
+
+!! 4. Entity-Relationship Diagram
+
+```mermaid
+erDiagram
+    TIDDLER ||--o{ TAG : has
+    TIDDLER {
+        string title PK
+        string text
+        string type
+        date modified
+    }
+    TAG {
+        string name PK
+    }
+    PLUGIN ||--|{ TIDDLER : contains
+    PLUGIN {
+        string title PK
+        string version
+        string author
+    }
+```
