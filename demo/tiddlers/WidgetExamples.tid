@@ -44,7 +44,57 @@ flowchart TD
 
 <$mermaid align="right" text="graph LR; X-->Y;"/>
 
-!! 4. Explicit Theme Override
+!! 4. Explicit Theme Override & Legibility Themes
+
+!!! High Contrast Theme (`theme="high-contrast"`)
+
+Enforces WCAG AAA compliance (contrast ratio >= 7:1) with high-visibility borders, fills, and text.
+
+```html
+<$mermaid theme="high-contrast" text="graph TD
+    A[Ultra Crisp Node] --> B{High Contrast Decision}
+    B -->|Verified| C[Readable Result]
+    B -->|Failed| D[Flagged Alert]
+"/>
+```
+
+<$mermaid theme="high-contrast" text="graph TD
+    A[Ultra Crisp Node] --> B{High Contrast Decision}
+    B -->|Verified| C[Readable Result]
+    B -->|Failed| D[Flagged Alert]
+"/>
+
+!!! Technical / Blueprint Theme (`theme="technical"`)
+
+Clean engineering blueprint styling with deep slate nodes and high-visibility cyan accents.
+
+```html
+<$mermaid theme="technical" text="flowchart LR
+    Client[Web Client] --> Gateway[API Gateway]
+    Gateway --> Auth[Auth Service]
+    Gateway --> DB[(PostgreSQL)]
+"/>
+```
+
+<$mermaid theme="technical" text="flowchart LR
+    Client[Web Client] --> Gateway[API Gateway]
+    Gateway --> Auth[Auth Service]
+    Gateway --> DB[(PostgreSQL)]
+"/>
+
+!!! Monochrome Theme (`theme="monochrome"`)
+
+Clean publication grayscale with solid high-contrast edges and text, ideal for printing and export.
+
+```html
+<$mermaid theme="monochrome" text="graph LR
+    Plan[Plan] --> Execute[Execute] --> Review[Review] --> Ship[Ship]
+"/>
+```
+
+<$mermaid theme="monochrome" text="graph LR
+    Plan[Plan] --> Execute[Execute] --> Review[Review] --> Ship[Ship]
+"/>
 
 !!! Forest Theme (`theme="forest"`)
 

@@ -79,7 +79,7 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
   test("plugin is loaded and registered in shadow tiddlers", () => {
     const pluginTiddler = $tw.wiki.getTiddler("$:/plugins/mblackman/mermaid");
     assert.ok(pluginTiddler, "Plugin $:/plugins/mblackman/mermaid must be loaded");
-    assert.equal(pluginTiddler.fields.version, "0.1.0");
+    assert.equal(pluginTiddler.fields.version, "0.2.0");
 
     const widgetTiddler = $tw.wiki.getTiddler("$:/plugins/mblackman/mermaid/widget.js");
     assert.ok(widgetTiddler, "Widget tiddler must be loaded");
@@ -192,6 +192,135 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
     assert.ok(container.innerHTML.includes("<code"), "Must output <code> element");
   });
 
+  test("palette extraction and themeVariables resolve correctly from active TiddlyWiki palette", () => {
+    // Add custom palette with complex rgb/rgba and <<colour ...>> references
+    $tw.wiki.addTiddler(new $tw.Tiddler({
+      title: "$:/palettes/TestComplexDark",
+      type: "application/x-tiddler-dictionary",
+      "color-scheme": "dark",
+      text: "background: rgb(20, 20, 25)\nforeground: #e6e6ec\nprimary: rgb(120, 82, 238)\ntiddler-background: <<colour background>>\ncode-background: rgba(0, 0, 0, 0.25)\ntable-border: #3b3a4a\n"
+    }));
+    $tw.wiki.addTiddler(new $tw.Tiddler({
+      title: "$:/Palette",
+      text: "$:/palettes/TestComplexDark"
+    }));
+
+    const widget = new MermaidWidget(
+      { type: "element", tag: "$mermaid", attributes: {} },
+      { wiki: $tw.wiki, document: $tw.fakeDocument }
+    );
+    widget.execute();
+
+    // Default 'auto' resolves to active palette via Mermaid 'base' theme
+    const themeCfg = widget.resolveThemeConfig();
+    assert.equal(themeCfg.theme, "base");
+    assert.ok(themeCfg.themeVariables, "themeVariables must be defined");
+    assert.equal(themeCfg.themeVariables.darkMode, true);
+    assert.equal(themeCfg.themeVariables.background, "#141419");
+    assert.equal(themeCfg.themeVariables.primaryColor, "#7852ee");
+    assert.equal(themeCfg.themeVariables.textColor, "#e6e6ec");
+
+    // All categorical cScale colors must be valid #rrggbb hex
+    for (let i = 0; i < 12; i++) {
+      assert.match(themeCfg.themeVariables["cScale" + i], /^#[0-9a-fA-F]{6}$/);
+      assert.match(themeCfg.themeVariables["cScaleLabel" + i], /^#[0-9a-fA-F]{6}$/);
+    }
+  });
+
+  test("legibility-first themes enforce WCAG AA (>=4.5:1) or AAA (>=7.0:1) contrast", () => {
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, "");
+      return [
+        parseInt(hex.slice(0, 2), 16),
+        parseInt(hex.slice(2, 4), 16),
+        parseInt(hex.slice(4, 6), 16)
+      ];
+    }
+    function getLuminance(r, g, b) {
+      const a = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+    function getContrast(h1, h2) {
+      const l1 = getLuminance(...hexToRgb(h1));
+      const l2 = getLuminance(...hexToRgb(h2));
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    }
+
+    const testThemes = ["auto", "palette", "high-contrast", "technical", "monochrome"];
+    for (const t of testThemes) {
+      const widget = new MermaidWidget(
+        { type: "element", tag: "$mermaid", attributes: { theme: { type: "string", value: t } } },
+        { wiki: $tw.wiki, document: $tw.fakeDocument }
+      );
+      widget.execute();
+      const cfg = widget.resolveThemeConfig();
+      const tv = cfg.themeVariables;
+      assert.ok(tv, `themeVariables must exist for ${t}`);
+
+      const minContrast = t === "high-contrast" ? 7.0 : 4.5;
+
+      // Check categorical scales cScale0..11 vs cScaleLabel0..11
+      for (let i = 0; i < 12; i++) {
+        const bg = tv["cScale" + i];
+        const fg = tv["cScaleLabel" + i];
+        const ratio = getContrast(bg, fg);
+        assert.ok(ratio >= minContrast, `Theme ${t} cScale${i} contrast ${ratio.toFixed(2)} must be >= ${minContrast} (${bg} vs ${fg})`);
+      }
+
+      // Check git branch labels git0..7 vs gitBranchLabel0..7
+      for (let i = 0; i < 8; i++) {
+        const bg = tv["git" + i];
+        const fg = tv["gitBranchLabel" + i];
+        if (bg && fg) {
+          const ratio = getContrast(bg, fg);
+          assert.ok(ratio >= minContrast, `Theme ${t} git${i} contrast ${ratio.toFixed(2)} must be >= ${minContrast} (${bg} vs ${fg})`);
+        }
+      }
+
+      // Check note contrast
+      if (tv.noteBkgColor && tv.noteTextColor) {
+        const ratio = getContrast(tv.noteBkgColor, tv.noteTextColor);
+        assert.ok(ratio >= minContrast, `Theme ${t} note contrast ${ratio.toFixed(2)} must be >= ${minContrast}`);
+      }
+    }
+  });
+
+  test("modern Mermaid themes and stock themes resolve correctly", () => {
+    // Redux auto
+    const widgetRedux = new MermaidWidget(
+      { type: "element", tag: "$mermaid", attributes: { theme: { type: "string", value: "redux-auto" } } },
+      { wiki: $tw.wiki, document: $tw.fakeDocument }
+    );
+    widgetRedux.execute();
+    const reduxCfg = widgetRedux.resolveThemeConfig();
+    assert.ok(reduxCfg.theme === "redux-dark" || reduxCfg.theme === "redux");
+
+    // Stock default
+    const widgetStock = new MermaidWidget(
+      { type: "element", tag: "$mermaid", attributes: { theme: { type: "string", value: "forest" } } },
+      { wiki: $tw.wiki, document: $tw.fakeDocument }
+    );
+    widgetStock.execute();
+    const stockCfg = widgetStock.resolveThemeConfig();
+    assert.equal(stockCfg.theme, "forest");
+    assert.equal(stockCfg.themeVariables, undefined);
+  });
+
+  test("widget refreshes when active palette tiddler changes", () => {
+    const parser = $tw.wiki.parseText("text/vnd.tiddlywiki", '<$mermaid text="graph TD; A-->B;"/>');
+    const rootWidget = $tw.wiki.makeWidget(parser, { document: $tw.fakeDocument });
+    const container = $tw.fakeDocument.createElement("div");
+    rootWidget.render(container, null);
+
+    const currentPalette = ($tw.wiki.getTiddlerText("$:/Palette") || "$:/palettes/Vanilla").trim();
+    const changed = {};
+    changed[currentPalette] = true;
+    assert.equal(rootWidget.refresh(changed), true, "Must refresh when current palette tiddler changes");
+  });
+
   test("theme resolution automatically detects dark palettes", () => {
     // Test dark palette detection
     $tw.wiki.addTiddler(new $tw.Tiddler({
@@ -208,7 +337,10 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
       { wiki: $tw.wiki, document: $tw.fakeDocument }
     );
     widget.execute();
-    assert.equal(widget.resolveTheme(), "dark", "Must resolve to 'dark' for dark palette");
+    assert.equal(widget.isDarkMode(), true, "Must detect dark palette");
+    const darkCfg = widget.resolveThemeConfig();
+    assert.equal(darkCfg.theme, "base");
+    assert.equal(darkCfg.themeVariables.darkMode, true);
 
     // Test light palette
     $tw.wiki.addTiddler(new $tw.Tiddler({
@@ -219,7 +351,10 @@ describe("TiddlyWiki Mermaid Plugin Integration", () => {
       title: "$:/Palette",
       text: "$:/palettes/CustomLight"
     }));
-    assert.equal(widget.resolveTheme(), "default", "Must resolve to 'default' for light palette");
+    assert.equal(widget.isDarkMode(), false, "Must detect light palette");
+    const lightCfg = widget.resolveThemeConfig();
+    assert.equal(lightCfg.theme, "base");
+    assert.equal(lightCfg.themeVariables.darkMode, false);
   });
 
   test("syntax error diagnostics format clean alert box without orphans", () => {

@@ -49,6 +49,24 @@ type: text/vnd.tiddlywiki
   vertical-align: middle;
 }
 
+.tc-mermaid-container svg text {
+  text-rendering: geometricPrecision;
+}
+
+/* Legibility guards for Mermaid v11 diagrams with hardcoded inline colors */
+.tc-mermaid-container svg .commit-label,
+.tc-mermaid-container svg .commit-id,
+.tc-mermaid-container svg .commit-msg {
+  fill: currentColor;
+  opacity: 0.92;
+}
+
+.tc-mermaid-container svg .edgeLabel text,
+.tc-mermaid-container svg .edgeLabel span {
+  color: var(--suite-fg-primary);
+  fill: var(--suite-fg-primary);
+}
+
 /* Alignment Helpers */
 .tc-mermaid-align-left {
   text-align: left;

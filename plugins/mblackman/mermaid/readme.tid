@@ -7,10 +7,12 @@ Modern, self-contained, 100% offline ''Mermaid.js (v11+)'' diagram rendering for
 !! Features
 
 * ''100% Offline:'' Bundles Mermaid v11+ with all diagram types inlined. No external CDNs or network requests.
+* ''Active Palette Integration:'' Diagrams automatically adopt your active TiddlyWiki palette colors (`primary`, `background`, `foreground`, `border`), dynamically updating whenever you switch palettes.
+* ''Legibility-First Architecture:'' Guarantees high text contrast across all node types, categorical scales (`cScale0..11`), git branch labels, and notes, avoiding the unreadable color combinations in stock Mermaid.
+* ''Curated Theme Library:'' Choose between Palette Sync (`auto`), High Contrast (WCAG AAA >= 7:1), Technical Blueprint, Monochrome, Modern Mermaid v11 themes (`redux`, `neo`), or classic stock themes.
 * ''Unified WikiText & Markdown:'' Render diagrams inside standard fenced code blocks (<code>```mermaid</code>) in both native WikiText and Markdown tiddlers ([[$:/plugins/tiddlywiki/markdown]]).
 * ''Direct Widget Support:'' Embed diagrams anywhere using `<$mermaid text="..." />` or inline `<$mermaid>...</$mermaid>`.
 * ''Mermaid v11 Diagrams:'' Supports Flowcharts, Sequence Diagrams, Class Diagrams, State Diagrams, ER Diagrams, Mindmaps, Timelines, GitGraphs, Pie Charts, Quadrants, XY Charts, Kanban, Architecture Diagrams, C4, Sankey, Packet, Block, and more.
-* ''Automatic Dark Mode:'' Seamlessly adapts diagrams between light and dark palettes.
 * ''Suite Design System Ready:'' Fully compatible with the TiddlyWiki Productivity Suite (`MASTER.md`) and Slipstream theme.
 
 !! Usage
@@ -49,7 +51,26 @@ mindmap
 
 |!Attribute |!Description |!Default |
 |`text` or `source` |The Mermaid diagram definition string |`""` |
-|`theme` |`auto`, `default`, `dark`, `forest`, `neutral`, or `base` |`auto` |
+|`theme` |Theme name (see below) |`auto` |
 |`align` |Container alignment: `left`, `center`, or `right` |`center` |
 |`class` |Optional additional CSS class names for styling |`""` |
 |`security-level` |Mermaid security level: `loose`, `strict`, `antiscript`, or `sandbox` |`loose` |
+
+!! Available Themes
+
+* ''Dynamic & Legibility-First:''
+** `auto` (Default): Dynamically maps colors from your active TiddlyWiki palette with contrast safeguards.
+** `palette`: Explicitly bind to the active TiddlyWiki palette.
+** `high-contrast`: WCAG AAA compliance (>= 7:1 contrast ratio) with bold borders and ultra-crisp text.
+** `technical` / `blueprint`: Clean technical blueprint theme with high-visibility cyan/slate styling.
+** `monochrome`: Publication-grade grayscale with distinct solid fills and clear text.
+* ''Modern Mermaid v11:''
+** `redux-auto`, `redux`, `redux-dark`: Mermaid v11 modern minimalist theme.
+** `redux-color-auto`, `redux-color`, `redux-color-dark`: Modern colorful palette with crisp typography.
+** `neo-auto`, `neo`, `neo-dark`: Soft pastel tones with dark mode support.
+* ''Classic Mermaid:''
+** `default`: Classic Mermaid light theme.
+** `dark`: Classic Mermaid dark theme.
+** `forest`: Classic green tones.
+** `neutral`: Classic grayscale.
+** `base`: Unstyled base theme.

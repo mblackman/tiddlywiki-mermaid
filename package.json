@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-mermaid",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Offline Mermaid v11+ diagram rendering plugin for TiddlyWiki5",
   "author": "mblackman",
