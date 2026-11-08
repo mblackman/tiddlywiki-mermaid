@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-mermaid",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Offline Mermaid v11+ diagram rendering plugin for TiddlyWiki5",
   "author": "mblackman",
@@ -19,7 +19,7 @@
     "cross-env": "^10.1.0",
     "esbuild": "^0.25.0",
     "jsdom": "^31.0.0",
-    "mermaid": "^11.4.1",
+    "mermaid": "^12.3.0",
     "tiddlywiki": "^5.4.1"
   }
 }
